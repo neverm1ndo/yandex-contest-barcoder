@@ -1,0 +1,12 @@
+ extends:
+   - 'airbnb-base'
+ env:
+   node: true
+   browser: true
+ overrides:
+   no-bitwise: 'off'
+   no-console:
+     - error:
+        allow:
+          - "warn"
+          - "error"
