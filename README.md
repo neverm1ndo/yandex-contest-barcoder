@@ -29,6 +29,7 @@ type CoffeeMachineDebugInfo = {
 ```
 ### Алгоритм отрисовки баркода
 Баркоды, которые придумал Фёдор, выглядят так:
+
 ![bar](https://contest.yandex.ru/testsys/statement-image?imageId=3c3f8db3612365e5051041388a36d947f066c978d5c324d9218b062bb8765b8c)
 
 Баркод имеет фиксированный размер (по экрану кофемашины) — 300 на 96 пикселей. С левого и правого края баркод ограничен пятью полосками (чёрная, белая, чёрная, белая, чёрная). Ширина чёрной полоски — 4 пикселя, белой полоски - 5 пикселей.
@@ -65,7 +66,9 @@ function renderBarcode(debugInfo, element) {
 }
 ```
 Баркод:
+
 ![bar1](https://contest.yandex.ru/testsys/statement-image?imageId=f37625061f759da40ce3e02a28ce7f4abab6c9d8cfd88a3614609051e7b153a7)
+
 Отладочная информация:
 ```json
 {  
@@ -75,4 +78,5 @@ function renderBarcode(debugInfo, element) {
 }
 ```
 Баркод:
+
 ![bar2](https://contest.yandex.ru/testsys/statement-image?imageId=b195b513214a228276aee97746209ea7ee83cf73cec6e258363178582f124214)
