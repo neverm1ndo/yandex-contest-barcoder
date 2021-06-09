@@ -7,22 +7,29 @@ module.exports = class Barcoder {
     this.init(selector);
   }
 
+  /**
+   * @param {string} selector
+  */
   init(selector) {
     this.canvas = document.querySelector(selector);
     this.ctx = this.canvas.getContext('2d', { antialias: false, depth: false });
-    this.width = this.canvas.width;
-    this.height = this.canvas.height;
-    this.mon = document.querySelector('#arr');
   }
 
   clear() {
     this.fillBackground('#ffffff');
   }
 
+  /**
+   * @param {string} color
+  */
   fillBackground(color) {
     this.ctx.fillStyle = color;
-    this.ctx.fillRect(0, 0, this.width, this.height);
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
+  /**
+   * @param {string} dbg
+   * @return {string}
+  */
 
   static formDebugInfo(dbg) {
     function formatCode(code) {
@@ -37,8 +44,25 @@ module.exports = class Barcoder {
     return `${info.id}${formatCode(info.code)}${info.message}${(' ').repeat(34 - info.message.length)}`;
   }
 
-  renderBarcode(debugInfo, element) {
-    debugInfo = Barcoder.formDebugInfo(debugInfo);
+  drawStartEnd() {
+    const border = [1, 0, 1, 0, 1, 1, 0, 1, 0, 1];
+    let margin = 0;
+    for (let i = 0; i <= border.length; i += 1) {
+      this.ctx.fillStyle = border[i] === 1 ? CLR_BLACK : CLR_WHITE;
+      this.ctx.fillRect(margin, 0, border[i] === 1 ? 4 : 5, this.canvas.height);
+      margin += (-border[i] + 5);
+      if (i === 4) { margin = this.canvas.width - 22; }
+    }
+  }
+
+  /**
+   * @param {string} debugInfo
+   * @return {void}
+   */
+  renderBarcode(debugInfo) {
+    this.clear();
+    this.drawStartEnd();
+
     function stringToCode(string) {
       const result = [];
       for (let i = 0; i < string.length; i += 1) {
@@ -46,6 +70,7 @@ module.exports = class Barcoder {
       }
       return result;
     }
+
     function mapToBinary(array) {
       const result = [];
       for (let i = 0; i < array.length; i += 1) {
@@ -54,29 +79,17 @@ module.exports = class Barcoder {
       return result.join('');
     }
 
-    function csumm(arr) {
-      let xor = arr[0] ^ arr[1];
-      for (let i = 2; i < arr.length; i += 1) {
+    function controlSumm(arr) {
+      let xor = 0;
+      for (let i = 0; i < arr.length; i += 1) {
         xor ^= arr[i];
       }
       return mapToBinary([xor]);
     }
-    const drawStartEnd = () => {
-      const border = [1, 0, 1, 0, 1, 1, 0, 1, 0, 1];
-      let margin = 0;
-      for (let i = 0; i <= border.length; i += 1) {
-        this.ctx.fillStyle = border[i] === 1 ? CLR_BLACK : CLR_WHITE;
-        this.ctx.fillRect(margin, 0, border[i] === 1 ? 4 : 5, this.height);
-        margin += (-border[i] + 5);
-        if (i === 4) { margin = this.canvas.width - 22; }
-      }
-    };
-    const map = stringToCode(debugInfo);
-    this.mon.innerText = debugInfo;
-    map.push(csumm(map));
-    const binmap = mapToBinary(map);
-    drawStartEnd();
-    const rows = binmap.match(/.{1,32}/g);
+
+    const map = stringToCode(Barcoder.formDebugInfo(debugInfo));
+    map.push(controlSumm(map));
+    const rows = mapToBinary(map).match(/.{1,32}/g);
     for (let row = 0; row < rows.length; row += 1) {
       for (let char = 0; char < rows[row].length; char += 1) {
         this.ctx.fillStyle = parseInt(rows[row][char], 10) === 1 ? CLR_BLACK : CLR_WHITE;

@@ -14,10 +14,14 @@ pre {
 }
 textarea {
   width: 99%;
-  height: 15%;
+  height: 80px;
   border: none;
   padding: 0px;
+  padding-top: 10px;
   resize: none;
+}
+textarea:focus, textarea:active {
+  outline: none;
 }
 #brcd {
   position: fixed;

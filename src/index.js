@@ -13,11 +13,9 @@ document.body.appendChild(component());
 const barcoder = new Barcoder();
 const input = document.querySelector('#input');
 
-barcoder.clear();
 barcoder.renderBarcode(input.value);
 
 input.addEventListener('input', () => {
-  barcoder.clear();
   if (!input.value.length) {
     return;
   }

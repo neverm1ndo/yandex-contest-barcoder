@@ -1,12 +1,11 @@
  extends:
-   - 'airbnb-base'
+   - airbnb-base
  env:
    node: true
    browser: true
- overrides:
-   no-bitwise: 'off'
+ rules:
+   no-bitwise: off
    no-console:
-     - error:
-        allow:
-          - "warn"
-          - "error"
+     - error
+     - allow:
+       - error
